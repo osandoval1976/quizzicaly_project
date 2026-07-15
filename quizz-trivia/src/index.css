@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display:flex;
+    align-content:center;
+    justify-content:center;
+    height:100vh;
+    width:100vw;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    
+    background-image: url('./src/autohtml-project/blobs1.svg'), url('./src/autohtml-project/blobs0.svg');
+    background-repeat: no-repeat;
+    background-position: 1200px -90px,left -8em top 32em;
+    background-size: 315px, 320px;
+}
+
+.App{
+    font-size: 1.5em;
+    text-align: center;
+    background-color: #5c5959;
+    padding: 2em;
+    color: black;
+}
+
