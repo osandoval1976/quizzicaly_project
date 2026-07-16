@@ -13,16 +13,37 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     
-    background-image: url('my-app/public/blobs1.svg'), url('my-app/public/blobs0.svg');
+    background-image: url('../public/blobs1.svg'), url('../public/blobs0.svg');
     background-repeat: no-repeat;
     background-position: 1200px -90px,left -8em top 32em;
     background-size: 315px, 320px;
 }
 
 .App{
-    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
     text-align: center;
-    background-color: #5c5959;
     padding: 2em;
     color: black;
+    
+}
+
+.app-title{
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+.app-text{
+    font-size: 1.2em;
+    margin-bottom: 1.5em;
+}
+.btn-title{
+    padding: .9em 2.7em;
+    font-size: 1.5em;
+    background-color: #4D5B9E;
+    color: white;
+    border-radius: 0.5em;
 }
