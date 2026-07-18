@@ -22,6 +22,6 @@ useEffect(() => {
 , [])
 
  return (
-    <h1>{questions.questions}</h1>
+    <h1>{questions.question}</h1>
   )
 }
