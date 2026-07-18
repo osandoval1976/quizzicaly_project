@@ -32,9 +32,8 @@ export default function App() {
            
             <div key={`${data.question}-${index}`}>
               <h2 className='f-size'>{data.question}</h2>
-              <p className='mode-list'>Difficulty: {data.difficulty}</p>
-              <span className='q-list'>{[...data.correct_answer, data.incorrect_answers]}</span>
-               
+              <li className='q-list'>{[data.correct_answer+' ,'+data.incorrect_answers.join(' , ')]}</li>
+              
               
             </div>
           ))
