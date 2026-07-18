@@ -58,3 +58,32 @@ body {
     color: white;
     border-radius: 0.5em;
 }
+
+.questions{
+color: #293264;
+  text-align: left;
+  font-family: "Karla-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+}
+.answers{
+     color: #293264;
+  text-align: center;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 10.239999771118164px;
+  font-weight: 500;
+  font-style: none;
+  left: 8px;
+  top: 3.6px;
+  width: 104px;
+  height: 13px;
+  background: #d6dbf5;
+  border-radius: 7.71px;
+  width: 120.06px;
+  height: 20.05px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  position: relative;
+}

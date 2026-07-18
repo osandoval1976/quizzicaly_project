@@ -4,7 +4,7 @@ import { useState, useEffect, React } from 'react';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState();
 
   const getMovies = async () => {
     try {
@@ -31,8 +31,8 @@ export default function App() {
         ) : (datas.map((data, index) => (
            
             <div key={`${data.question}-${index}`}>
-              <h2 className='f-size'>{data.question}</h2>
-              <li className='q-list'>{[data.correct_answer+' ,'+data.incorrect_answers.join(' , ')]}</li>
+              <h2 className='questions'>{data.question}</h2>
+              <li className='answers'>{[data.correct_answer +' ,' +data.incorrect_answers.join(' , ')]}</li>
               
               
             </div>
