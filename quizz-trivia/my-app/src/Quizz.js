@@ -25,3 +25,4 @@ useEffect(() => {
     <h1>{questions.question}</h1>
   )
 }
+
