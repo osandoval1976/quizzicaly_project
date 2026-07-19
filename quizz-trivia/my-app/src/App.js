@@ -5,7 +5,7 @@ import Quizz from './Quizz';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [datas, setDatas] = useState([]);
-
+  const [quotes, setQuotes]=useState(false||[])
   const getMovies = async () => {
     try {
       const response = await fetch('https://opentdb.com/api.php?amount=4');
@@ -23,8 +23,10 @@ export default function App() {
   }, []);
  
  const answers =  (datas.map((data, index) =>{
- const dataNumbers = [data.correct_answer +' , ' + data.incorrect_answers]
+ const dataNumbers = [data.correct_answer +', ' + data.incorrect_answers]
+
   console.log(data.question)
+
   function getRandomnumber(array){
    
    const randonNumber = Math.floor(Math.random() * array.length)
@@ -32,7 +34,7 @@ export default function App() {
    return array[randonNumber]
 
   }
-
+ 
   return (
            
             <div key={`${data.question}-${index}`}>
