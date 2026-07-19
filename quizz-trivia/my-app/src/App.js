@@ -1,10 +1,10 @@
 import './App.css';
 import { useState, useEffect, React } from 'react';
-
+import Quizz from './Quizz';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [datas, setDatas] = useState();
+  const [datas, setDatas] = useState([]);
 
   const getMovies = async () => {
     try {
@@ -22,22 +22,21 @@ export default function App() {
     getMovies();
   }, []);
   
-  
+ const answers =  (datas.map((data, index) => (
+           
+            <div key={`${data.question}-${index}`}>
+              <h2 className='questions'>{data.question}</h2>
+              <li className='answers'>{Quizz([data.correct_answer, data.incorrect_answers])}</li>
+              </div>
+          ))
+        )
+        
   return (
     <section className='App-section-1'>
       <div>
         {isLoading ? (
           'Loading...'
-        ) : (datas.map((data, index) => (
-           
-            <div key={`${data.question}-${index}`}>
-              <h2 className='questions'>{data.question}</h2>
-              <li className='answers'>{[data.correct_answer +' ,' +data.incorrect_answers.join(' , ')]}</li>
-              
-              
-            </div>
-          ))
-        )
+        ) :answers
           }
       </div>
     </section>
