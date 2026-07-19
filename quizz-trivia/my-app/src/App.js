@@ -23,11 +23,13 @@ export default function App() {
   }, []);
  
  const answers =  (datas.map((data, index) =>{
- const dataNumber = [data.incorrect_answers +' ,' + [data.correct_answer]]
+ const dataNumbers = [data.correct_answer +' , ' + data.incorrect_answers]
+  console.log(data.question)
   function getRandomnumber(array){
-   const randonNumber = array[Math.floor(Math.random() * array.length)]
-   console.log(data.question,randonNumber)
-   return randonNumber
+   
+   const randonNumber = Math.floor(Math.random() * array.length)
+   console.log(array[randonNumber])
+   return array[randonNumber]
 
   }
 
@@ -35,7 +37,7 @@ export default function App() {
            
             <div key={`${data.question}-${index}`}>
               <h2 className='questions'>{data.question}</h2>
-              <li className='answers'>{getRandomnumber([dataNumber])}</li>
+              <li className='answers' key={index}>{getRandomnumber(dataNumbers)}</li>
               </div>
           )}
         )
