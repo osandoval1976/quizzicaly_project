@@ -4,7 +4,7 @@ import Quizz from './Quizz';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState(false||[]);
 
   const getMovies = async () => {
     try {
@@ -21,14 +21,21 @@ export default function App() {
   useEffect(() => {
     getMovies();
   }, []);
-  
- const answers =  (datas.map((data, index) => (
+ 
+ const answers =  (datas.map((data, index) =>{
+ const dataNumber = [data.incorrect_answers +' ,' + [data.correct_answer]]
+ const randonNumber = Math.floor(Math.random() * dataNumber.length)
+
+console.log(data.question, dataNumber[randonNumber])
+
+  return (
            
             <div key={`${data.question}-${index}`}>
               <h2 className='questions'>{data.question}</h2>
-              <li className='answers'>{Quizz([data.correct_answer, data.incorrect_answers])}</li>
+              <li className='answers'>{dataNumber[randonNumber]}</li>
               </div>
-          ))
+          )}
+        )
         )
         
   return (
