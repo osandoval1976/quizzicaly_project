@@ -27,11 +27,12 @@ export default function App() {
 
   console.log(data.question)
 
-  function getRandomnumber(array){
-   
-   const randonNumber = Math.floor(Math.random() * array.length)
-   console.log(array[randonNumber])
-   return array[randonNumber]
+  const getRandomnumber =()=>{
+   const [newOne, setNewOne]=useState(dataNumbers[0])
+    
+   const randonNumber = Math.floor(Math.random() * dataNumbers.length)
+   console.log(dataNumbers[randonNumber])
+   setNewOne(dataNumbers[randonNumber])
 
   }
  
@@ -39,7 +40,7 @@ export default function App() {
            
             <div key={`${data.question}-${index}`}>
               <h2 className='questions'>{data.question}</h2>
-              <li className='answers' key={index}>{getRandomnumber(dataNumbers)}</li>
+              <li className='answers' key={index}>{newOne}</li>
               </div>
           )}
         )
