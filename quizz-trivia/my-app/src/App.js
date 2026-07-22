@@ -5,7 +5,7 @@ import Quizz from './Quizz';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [datas, setDatas] = useState([]);
-     const [newOne, setNewOne]=useState(dataNumbers[0])
+ 
   const getMovies = async () => {
     try {
       const response = await fetch('https://opentdb.com/api.php?amount=4');
@@ -22,30 +22,19 @@ export default function App() {
     getMovies();
   }, []);
  
- const answers =  (datas.map((data, index) =>{
- const dataNumbers = [data.correct_answer +', ' + data.incorrect_answers]
-
-  console.log(data.question)
-
-  const getRandomnumber =()=>{
-
-    
-   const randonNumber = Math.floor(Math.random() * dataNumbers.length)
-   console.log(dataNumbers[randonNumber])
-   setNewOne(dataNumbers[randonNumber])
-
-  }
- 
-  return (
+const answers =  (datas.map((data, index) =>{
+const newRandom = Quizz(data)
+return (
            
             <div key={`${data.question}-${index}`}>
               <h2 className='questions'>{data.question}</h2>
-              <li className='answers' key={index}>{newOne}</li>
+              <p className='answers'>{newRandom[data.correct_answer-data.incorrect_answers]}</p>
               </div>
-          )}
-        )
-        )
-        
+          )
+        }
+       ))
+
+   console.log(answers)     
   return (
     <section className='App-section-1'>
       <div>
