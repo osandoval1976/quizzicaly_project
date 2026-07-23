@@ -1,4 +1,5 @@
 
+
 import './App.css';
 import { useState, useEffect} from 'react';
 import React from 'react'
@@ -44,7 +45,7 @@ const answers = datas.map(data=>{
 const shuffleArray = () => {
 // Clone the array first to avoid mutating state directly
     const shuffled = [...answers]; 
-    console.log(shuffled)
+    
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap
@@ -65,12 +66,12 @@ if(!isLoading){
         <p className='App-text'>Start your Quizz Challenge</p>
         </>
     {!visible? <button onClick={shuffleArray} className='btn-title'>Start Quizz</button> :  
-    <div>
+    <div className='questions'>
      
-    <ul>
-    {items.map(item => (
+    <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+    {items.map((item,index) => (
     
-   <li key={item}> <h2> {item.questions}</h2>{item.answer}</li>
+   <li key={index}> <h2 > {item.questions}</h2>{item.answer}</li>
     ))} 
         
       </ul>
