@@ -1,6 +1,10 @@
-import { useState } from 'react';
-const initialItems = ["Item A", "Item B", "Item C", "Item D"];
-export default function Quizz() {
+import { useState, React } from 'react';
+
+export default function Quizz(props) {
+    
+const initialItems = props.map(items=>{
+    return [items.correct_answer , ... items.incorrect_answers]
+})
   const [items, setItems] = useState(initialItems);
   const [visible, setInvisible] = useState(false)
   const shuffleArray = () => {
@@ -18,8 +22,13 @@ export default function Quizz() {
  
   return (
     <div>
-    {!visible? <button onClick={shuffleArray}>Shuffle List</button> :  <ul>
+        <>
+        <h1 className='App-section-1'>Quizzical App</h1>
+        <p className='App-text'>Start your Quizz Challenge</p>
+        </>
+    {!visible? <button onClick={shuffleArray} className='btn-title'>Start Quizz</button> :  <ul>
         {/* WARNING: Never use Math.random() or index as the element key here */}
+        <><h2>datas</h2></>
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}

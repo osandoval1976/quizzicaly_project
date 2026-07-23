@@ -23,29 +23,19 @@ export default function App() {
     getMovies();
   }, []);
  
-const answers =  (datas.map((data, index) =>{
-const newRandom = Quizz(data)
-return (
-           
-            <div key={`${data.question}-${index}`}>
-              <h2 className='questions'>{data.question}</h2>
-              <p className='answers'>{newRandom[data.correct_answer-data.incorrect_answers]}</p>
-              </div>
-          )
-        }
-       ))
 
-   console.log(answers)     
-  return (
-    <section className='App-section-1'>
-      <div>
-        {isLoading ? (
-          'Loading...'
-        ) :answers
-          }
-      </div>
-    </section>
+return (
+    <div>{
+      
+      !isLoading? 'isLoading': Quizz(datas)
+  
+    }
+    </div>
   );
+  
+        
+
+   
 }
 /*"The Fisher–Yates shuffle is an algorithm for shuffling a finite sequence. 
 The algorithm takes a list of all the elements of the sequence, and continually determines 
