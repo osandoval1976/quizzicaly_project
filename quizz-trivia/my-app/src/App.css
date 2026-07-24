@@ -68,24 +68,18 @@ color: #293264;
   position: relative;
 }
  .answers{
-  color: #293264;
+  display: inline;
+  color: bisque;
   text-align: center;
   font-family: "Inter-Medium", sans-serif;
-  font-size: 10.239999771118164px;
-  font-weight: 500;
-  font-style: none;
-  left: 8px;
-  top: 3.6px;
-  width: 104px;
-  height: 13px;
-  background: #d6dbf5;
-  border-radius: 7.71px;
+  font-size: 20px;
+  font-weight: 300;
+  margin-top: 30px;
   width: 120.06px;
   height: 20.05px;
-  position: absolute;
-  left: 0px;
+  padding:20px;
   top: 0px;
-  position: relative;
-  margin-right: 800px;
-  padding-right: 2px;
+  padding-right: 25px;
+  border-radius: 1.5em solid #738004;
+  background-color: #243fc5;
 }

@@ -31,27 +31,28 @@ const [datas, setDatas] = useState([]);
 const [items, setItems] = useState([]);
 const [visible, setInvisible] = useState(false);
 
+const shuffleArray = () => {
 const answers = datas.map(data=>{
   let allData = {
-  answer : [data.correct_answer, ...data.incorrect_answers],
+  answer : [data.correct_answer,...data.incorrect_answers],
   questions : data.question
   }
   return allData
   
 })  
-
-
-
-const shuffleArray = () => {
+let shuffed =[]
 // Clone the array first to avoid mutating state directly
-    const shuffled = [...answers]; 
+   for(let i=0; i < answers.length; i+=1){
+    let bloque = answers.slice(i,i + 1)
+   
+shuffed.push(bloque)
+  }
+    console.log(shuffed)
+    const j = shuffed[Math.floor(Math.random() * shuffed.length)];
+     
+   
     
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap
-    }
-    
-    setItems(shuffled);
+    setItems(j);
     setInvisible(items)
 
 }
@@ -59,19 +60,19 @@ const shuffleArray = () => {
 
 if(!isLoading){
 
- return (
+  return (
  <div>
         <>
         <h1 className='App-section-1'>Quizzical App</h1>
-        <p className='App-text'>Start your Quizz Challenge</p>
+        <p className='question'>Start your Quizz Challenge</p>
         </>
     {!visible? <button onClick={shuffleArray} className='btn-title'>Start Quizz</button> :  
-    <div className='questions'>
+    <div className='App-title'>
      
     <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
     {items.map((item,index) => (
     
-   <li key={index}> <h2 > {item.questions}</h2>{item.answer}</li>
+   <li key={index}> <h2 className='app-text'> {item.questions}</h2><span className='answers'>{item.answer}</span></li>
     ))} 
         
       </ul>
