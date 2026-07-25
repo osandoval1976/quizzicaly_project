@@ -1,15 +1,12 @@
-
-
 import './App.css';
-import { useState, useEffect} from 'react';
-import React from 'react'
-
+import './styles.css';
+import { useState, useEffect } from 'react';
 
 export default function App() {
- 
-const [isLoading, setIsLoading] = useState(true);
-const [datas, setDatas] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [datas, setDatas] = useState([]);
+  const [items, setItems] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   const getMovies = async () => {
     try {
@@ -17,7 +14,7 @@ const [datas, setDatas] = useState([]);
       const data = await response.json();
       setDatas(data.results || []);
     } catch (error) {
-      console.error('Error fetching movies:', error);
+      console.error('Error fetching quiz data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -27,62 +24,57 @@ const [datas, setDatas] = useState([]);
     getMovies();
   }, []);
 
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
-const [items, setItems] = useState([]);
-const [visible, setInvisible] = useState(false);
+  const startQuiz = () => {
+    const questions = datas.map((all, index) => ({
+      id: index,
+      question: all.question,
+      answers: shuffleArray([all.correct_answer, ...all.incorrect_answers]),
+    }));
 
-const shuffleArray = () => {
-const answers = datas.map(data=>{
-  let allData = {
-  answer : [data.correct_answer,...data.incorrect_answers],
-  questions : data.question
+    setItems(questions);
+    setVisible(true);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
-  return allData
-  
-})  
-let shuffed =[]
-// Clone the array first to avoid mutating state directly
-   for(let i=0; i < answers.length; i+=1){
-    let bloque = answers.slice(i,i + 1)
-   
-shuffed.push(bloque)
-  }
-    console.log(shuffed)
-    const j = shuffed[Math.floor(Math.random() * shuffed.length)];
-     
-   
-    
-    setItems(j);
-    setInvisible(items)
-
-}
-
-
-if(!isLoading){
 
   return (
- <div>
-        <>
-        <h1 className='App-section-1'>Quizzical App</h1>
-        <p className='question'>Start your Quizz Challenge</p>
-        </>
-    {!visible? <button onClick={shuffleArray} className='btn-title'>Start Quizz</button> :  
-    <div className='App-title'>
-     
-    <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
-    {items.map((item,index) => (
-    
-   <li key={index}> <h2 className='app-text'> {item.questions}</h2><span className='answers'>{item.answer}</span></li>
-    ))} 
-        
-      </ul>
-      </div>
-      }
-    </div>
-   
-  );
-}
+    <div>
+      <h1 className='App-section-1'>Quizzical App</h1>
+      <p className='App-text'>Start your Quizz Challenge</p>
 
+      {!visible ? (
+        <button onClick={startQuiz} className='btn-title'>
+          Start Quizz
+        </button>
+      ) : (
+        <div className='questions'>
+          <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+            {items.map((item) => (
+              <li key={item.id} style={{ 
+            padding: '10px', 
+            backgroundColor: '#f4f4f4',
+            marginBottom: '5px' 
+          }}>
+                <h2>{item.question}</h2>
+                <button className='list' key={item}>{item.answers.join(' ')}</button>
+                
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
 }
 /*"The Fisher–Yates shuffle is an algorithm for shuffling a finite sequence. 
 The algorithm takes a list of all the elements of the sequence, and continually determines 
