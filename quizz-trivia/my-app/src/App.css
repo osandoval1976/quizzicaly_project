@@ -83,3 +83,13 @@ color: #293264;
   border-radius: 1.5em solid #738004;
   background-color: #243fc5;
 }
+
+li.list{
+  color:black;
+  text-decoration: none;
+  background: #eee;
+  border-radius: 12px solid #ccc;
+  gap:1px;
+  padding:20px 30px;
+  display:block;
+}
