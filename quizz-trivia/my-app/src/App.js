@@ -1,48 +1,30 @@
 import './App.css';
 import './styles.css';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import shuffleArray from './Quizz';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [datas, setDatas] = useState([]);
-  const [items, setItems] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [visible, setVisible] = useState(false);
 
-  const getMovies = async () => {
-    try {
-      const response = await fetch('https://opentdb.com/api.php?amount=4');
-      const data = await response.json();
-      setDatas(data.results || []);
-    } catch (error) {
-      console.error('Error fetching quiz data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const response = await fetch('https://opentdb.com/api.php?amount=4');
+        const data = await response.json();
+        setQuestions(data.results || []);
+      } catch (error) {
+        console.error('Error fetching quiz data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     getMovies();
   }, []);
 
-  const shuffleArray = (array) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
-  const startQuiz = () => {
-    const questions = datas.map((all, index) => ({
-      id: index,
-      question: all.question,
-      answers: shuffleArray([all.correct_answer, ...all.incorrect_answers]),
-    }));
-
-    setItems(questions);
-    setVisible(true);
-  };
+  const startQuiz = () => setVisible(true);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -50,31 +32,38 @@ export default function App() {
 
   return (
     <div>
-      <h1 className='App-section-1'>Quizzical App</h1>
-      <p className='App-text'>Start your Quizz Challenge</p>
+      <h1 className="App-section-1">Quizzical App</h1>
+      <p className="App-text">Start your Quizz Challenge</p>
 
       {!visible ? (
-        <button onClick={startQuiz} className='btn-title'>
+        <button onClick={startQuiz} className="btn-title">
           Start Quizz
         </button>
       ) : (
-        <div className='questions'>
-          <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
-            {items.map((item) => (
-              <li key={item.id} style={{ 
-            padding: '10px', 
-            backgroundColor: '#f4f4f4',
-            marginBottom: '5px' 
-          }}>
+        <section>
+          {questions.map((item, index) => {
+            const answers = shuffleArray([
+              item.correct_answer,
+              ...item.incorrect_answers,
+            ]);
+
+            return (
+              <article key={index} style={{ marginBottom: '20px' }}>
                 <h2>{item.question}</h2>
-                <button className='list' key={item}>{item.answers.join(' ')}</button>
-                
-              </li>
-            ))}
-          </ul>
-        </div>
+                <ul>
+                  {answers.map((answer, answerIndex) => (
+                    <li key={answerIndex} className="span">
+                      {answer}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            );
+          })}
+        </section>
       )}
     </div>
+  );
 }
 /*"The Fisher–Yates shuffle is an algorithm for shuffling a finite sequence. 
 The algorithm takes a list of all the elements of the sequence, and continually determines 
