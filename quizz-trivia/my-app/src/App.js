@@ -2,36 +2,132 @@ import './App.css';
 import './styles.css';
 import { useEffect, useState } from 'react';
 import shuffleArray from './Quizz';
-
+import { clsx } from 'clsx';
+import { decode } from 'html-entities';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [questions, setQuestions] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [guessAnswer, setGuessAnswer] = useState({});
+  
+  // Nuevos estados para el flujo final del juego
+  const [isQuizOver, setIsQuizOver] = useState(false);
+  const [score, setScore] = useState(0);
+
+  // Función para cargar los datos de la API
+  const getMovies = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('https://opentdb.com/api.php?amount=4');
+      const data = await response.json();
+      
+      const formattedQuestions = (data.results || []).map((q) => {
+        // 2. Decodificamos la respuesta correcta y las incorrectas desde la API
+        const correctAnswerClean = decode(q.correct_answer);
+        const incorrectAnswersClean = q.incorrect_answers.map(ans => decode(ans));
+        
+        const allAnswers = [correctAnswerClean, ...incorrectAnswersClean];
+        
+        return {
+          ...q,
+          // Guardamos también la pregunta decodificada
+          questionClean: decode(q.question),
+          correctAnswerClean: correctAnswerClean,
+          shuffledAnswers: shuffleArray(allAnswers)
+        };
+      });
+
+      setQuestions(formattedQuestions);
+    } catch (error) {
+      console.error('Error fetching quiz data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getMovies = async () => {
-      try {
-        const response = await fetch('https://opentdb.com/api.php?amount=4');
-        const data = await response.json();
-        setQuestions(data.results || []);
-      } catch (error) {
-        console.error('Error fetching quiz data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     getMovies();
   }, []);
 
+  const handlerClick = (questionIndex, answer) => {
+    // Si el quiz ya terminó, no permitimos cambiar nada
+    if (isQuizOver) return;
+
+    setGuessAnswer((prev) => ({
+      ...prev,
+      [questionIndex]: answer
+    }));
+  };
+
   const startQuiz = () => setVisible(true);
 
+  // Función para procesar los puntos al terminar
+  const checkAnswers = () => {
+    let finalScore = 0;
+    questions.forEach((item, index) => {
+      if (guessAnswer[index] === item.correct_answer) {
+        finalScore++;
+      }
+    });
+    setScore(finalScore);
+    setIsQuizOver(true);
+  };
+
+  // Función para reiniciar todo el juego por completo
+  const resetQuiz = () => {
+    setGuessAnswer({});
+    setIsQuizOver(false);
+    setScore(0);
+    getMovies(); // Carga preguntas nuevas
+  };
+
+  // Saber si el usuario ya contestó todas las preguntas de la pantalla
+  const allQuestionsAnswered = Object.keys(guessAnswer).length === questions.length;
+
+  const listItems = questions.map((item, index) => {
+    const hasBeenAnswered = guessAnswer[index] !== undefined;
+    const chosenAnswer = guessAnswer[index];
+
+    return (
+      <main className="main" key={index}>
+        <h2 className='questions'>{item.question}</h2>
+        <ul>
+          {item.shuffledAnswers.map((answer, indexAnswer) => {
+            const isSelected = chosenAnswer === answer;
+            
+            // Lógica de clases CSS condicionales
+            const className = clsx('quiz-btn', {
+              // Mientras juega, solo pintamos de gris azulado la opción elegida
+              'selected-playing': isSelected && !isQuizOver,
+              // Al terminar, revelamos si es correcta o incorrecta con colores claros
+              'correct': isQuizOver && answer === item.correct_answer,
+              'incorrect': isQuizOver && isSelected && answer !== item.correct_answer,
+              'dimmed': isQuizOver && !isSelected && answer !== item.correct_answer
+            });
+
+            return (
+              <button
+                key={indexAnswer}
+                className={className}
+                // Se bloquea el botón si ya eligió una opción O si el juego terminó
+                disabled={hasBeenAnswered || isQuizOver}
+                onClick={() => handlerClick(index, answer)}
+              >
+                {answer}
+              </button>
+            );
+          })}
+        </ul>
+      </main>
+    );
+  });
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div>
+    <div className="app-container">
       <h1 className="App-section-1">Quizzical App</h1>
       <p className="App-text">Start your Quizz Challenge</p>
 
@@ -40,31 +136,36 @@ export default function App() {
           Start Quizz
         </button>
       ) : (
-        <section>
-          {questions.map((item, index) => {
-            const answers = shuffleArray([
-              item.correct_answer,
-              ...item.incorrect_answers,
-            ]);
-
-            return (
-              <article key={index} style={{ marginBottom: '20px' }}>
-                <h2>{item.question}</h2>
-                <ul>
-                  {answers.map((answer, answerIndex) => (
-                    <li key={answerIndex} className="span">
-                      {answer}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            );
-          })}
-        </section>
+        <>
+          <section className="answers">{listItems}</section>
+          
+          {/* SECCIÓN FINAL Y BOTONES DE CONTROL */}
+          <div className="footer-controls">
+            {!isQuizOver ? (
+              <button 
+                onClick={checkAnswers} 
+                className="btn-action"
+                disabled={!allQuestionsAnswered}
+              >
+                Check Answers
+              </button>
+            ) : (
+              <div className="score-section">
+                <span className="score-text">
+                  You scored <strong>{score}/{questions.length}</strong> correct answers
+                </span>
+                <button onClick={resetQuiz} className="btn-action">
+                  Play Again
+                </button>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
 }
+
 /*"The Fisher–Yates shuffle is an algorithm for shuffling a finite sequence. 
 The algorithm takes a list of all the elements of the sequence, and continually determines 
 the next element in the shuffled sequence by randomly drawing an element from the list until no elements remain. 
